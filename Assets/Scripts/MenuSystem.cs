@@ -13,6 +13,7 @@ public class MenuSystem : MonoBehaviour {
     [SerializeField] private ConnectionManager _conMan;
     [SerializeField] private InputField _callSignInputField;
     [SerializeField] private Button _launchButton;
+    [SerializeField] private Text _statusText; // Todo: make this show stuff
 
     private static readonly string PrefsPlayerNicknameKey = "player/callsign";
     private static readonly string PrefsPlayerNicknameDefault = "Rook Trainee";
