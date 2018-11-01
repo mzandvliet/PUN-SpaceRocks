@@ -1,0 +1,13 @@
+*.csproj
+.vscode/
+*.sln
+Library/
+obj/
+Temp/
+Build/
+*.mp4
+Assets/Photon/PhotonUnityNetworking/Demos/
+Assets/Photon/PhotonUnityNetworking/UtilityScripts/
+Assets/Photon/PhotonUnityNetworking/Demos.meta
+Assets/Photon/PhotonRealtime/Demos/
+Assets/Photon/PhotonChat/Demos/
