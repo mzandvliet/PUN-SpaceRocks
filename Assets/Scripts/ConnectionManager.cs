@@ -17,17 +17,30 @@ using UnityEngine.UI;
 
     Todo: 
     - make a little statemachine to manage these flows
-    - separate UI
  */
 
 public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallbacks {
 	[SerializeField] private PunLogLevel _logLevel = PunLogLevel.Full;
+
+    [SerializeField] private GameObject _shipPrefab;
+    [SerializeField] private CameraController _camera;
+
+    private GameObject _shipInstance;
+    private ConnectionState _state;
+
+
+    public event System.Action<ConnectionState> OnStateChanged;
+    public event System.Action<string> OnNetworkEvent;
 
 	private void Awake() {
 		PhotonNetwork.AutomaticallySyncScene = true;
 		PhotonNetwork.AddCallbackTarget(this);
 		PhotonNetwork.LogLevel = _logLevel;
 	}
+
+    private void Start() {
+        SetState(ConnectionState.Disconnected);
+    }
 
 	private void OnDestroy() {
 		Disconnect();
@@ -39,6 +52,9 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
 	public void Connect() {
 		Debug.Log("ConnectionManager || Connecting...");
+
+        SetState(ConnectionState.Connecting);
+
 		if (PhotonNetwork.IsConnected) {
 			PhotonNetwork.JoinRandomRoom();
 		} else {
@@ -58,25 +74,37 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
         PhotonNetwork.Disconnect();
 	}
 
+    private void SetState(ConnectionState state) {
+        _state = state;
+        if (OnStateChanged != null) {
+            OnStateChanged(state);
+        }
+    }
+
+    private void Notify(string msg) {
+        if (OnNetworkEvent != null) {
+            OnNetworkEvent(msg);
+        }
+    }
 
 	#region IConnectionCallbacks
 
     public void OnConnected() {
         Debug.Log("ConnectionManager || Connected to server", this);
 
-		
+        SetState(ConnectionState.Connected);
     }
 
     public void OnConnectedToMaster() {
         Debug.Log("ConnectionManager || Connected to master server", this);
-
-		PhotonNetwork.GetCustomRoomList(TypedLobby.Default, "");
 
         PhotonNetwork.JoinRandomRoom();
     }
 
     public void OnDisconnected(DisconnectCause cause) {
         Debug.Log("ConnectionManager || Disconnected, cause; " + cause, this);
+
+        SetState(ConnectionState.Disconnected);
     }
 
     public void OnRegionListReceived(RegionHandler regionHandler) {
@@ -106,14 +134,21 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
     public void OnCreateRoomFailed(short returnCode, string message) {
         Debug.LogError("ConnectionManager || CreateRoom failed");
+        OnNetworkEvent("Failed to create room...");
     }
 
     public void OnJoinedRoom() {
         Debug.Log("ConnectionManager || Succesfully joined room");
+
+        _shipInstance = PhotonNetwork.Instantiate(_shipPrefab.name, Vector3.zero, Quaternion.identity); // Todo: can add color here
+        _camera.SetTarget(_shipInstance.GetComponent<Rigidbody2D>());
+
+        SetState(ConnectionState.Playing);
     }
 
     public void OnJoinRoomFailed(short returnCode, string message) {
         Debug.LogError("ConnectionManager || JoinRoom failed");
+        OnNetworkEvent("Failed to join room...");
     }
 
     public void OnJoinRandomFailed(short returnCode, string message) {
@@ -131,25 +166,34 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
     #region IInRoomCallbacks
 
-    public void OnPlayerEnteredRoom(Player player) {
+    public void OnPlayerEnteredRoom(Photon.Realtime.Player player) {
         Debug.Log("ConnectionManager || Player joined: " + player.NickName);
+        OnNetworkEvent("Player joined the game: " + player.NickName);
     }
 
-    public void OnPlayerLeftRoom(Player player) {
+    public void OnPlayerLeftRoom(Photon.Realtime.Player player) {
         Debug.Log("ConnectionManager || Player left: " + player.NickName);
+        OnNetworkEvent("Player left the game: " + player.NickName);
     }
 
     public void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged) {
         Debug.Log("ConnectionManager || Some room properties changes, I dunno man...");
     }
 
-    public void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps) {
+    public void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps) {
         Debug.Log("ConnectionManager || Some player's properties changes, but why bother...");
     }
 
-    public void OnMasterClientSwitched(Player newMasterClient) {
+    public void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient) {
         Debug.Log("ConnectionManager || We're doing a host transfer, hold my beer...");
     }
 
     #endregion
+}
+
+public enum ConnectionState {
+    Disconnected,
+    Connecting,
+    Connected,
+    Playing
 }
