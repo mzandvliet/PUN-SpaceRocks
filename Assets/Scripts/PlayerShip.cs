@@ -9,12 +9,30 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(PhotonView))]
 public class PlayerShip : MonoBehaviour, IPunObservable {
+    [SerializeField] private GameObject _projectilePrefab;
+
     private PhotonView _view;
+    private Transform _transform;
     private Rigidbody2D _body;
+
+    private double _lastFireTime = -1.0;
 
     private void Awake() {
         _view = gameObject.GetComponent<PhotonView>();
+        _transform = gameObject.GetComponent<Transform>();
         _body = gameObject.GetComponent<Rigidbody2D>();
+    }
+
+    private void Update() {
+        if (_view.IsMine && Input.GetKeyDown(KeyCode.Space) && PhotonNetwork.Time - _lastFireTime > 0.5) {
+            var pos = _transform.position + _transform.forward * 1f;
+            var rot = _transform.rotation;
+            var projectile = PhotonNetwork.Instantiate(_projectilePrefab.name, pos, rot);
+            var projectileBody = projectile.GetComponent<Rigidbody2D>();
+            projectileBody.velocity = _body.GetPointVelocity(pos);
+            
+            _lastFireTime = PhotonNetwork.Time;
+        }
     }
 
     private void FixedUpdate() {

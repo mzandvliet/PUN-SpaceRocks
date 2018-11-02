@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4211912295577812}
   - component: {fileID: 33189558393760852}
   - component: {fileID: 23310998676150038}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4448807624113006}
   - component: {fileID: 33463354278706384}
   - component: {fileID: 23386117788135792}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4879789100527222}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 4962065756499426}
   - component: {fileID: 33430701454597974}
   - component: {fileID: 23993545163918570}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 4753450948185466}
   - component: {fileID: 33317847294862834}
   - component: {fileID: 23391494091425170}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 114092225762499738}
   - component: {fileID: 61496389167290608}
   - component: {fileID: 50733436193026024}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PlayerShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 4406952816938420}
   - component: {fileID: 33392754924623006}
   - component: {fileID: 23057136357116386}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 4345919529545418}
   - component: {fileID: 33545530482435978}
   - component: {fileID: 23352863692803384}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 4471553378948148}
   - component: {fileID: 33096064066178002}
   - component: {fileID: 23764384721928606}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -662,6 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e663f276924fa1c479cc516b9e088f2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _synchRotation: 1
 --- !u!114 &114881604733428336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -673,3 +674,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a849661ff2d63a349a41dddf725c8016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _projectilePrefab: {fileID: 1952634755278334, guid: 22e64fde65662d74fb98188eb164b46a,
+    type: 2}

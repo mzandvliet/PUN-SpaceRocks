@@ -21,6 +21,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(PhotonView), typeof(Rigidbody2D))]
 public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
+    [SerializeField] private bool _synchRotation;
+
     private PhotonView _view;
     private Rigidbody2D _body;
 
@@ -40,9 +42,10 @@ public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
         if (!_view.IsMine) {
             // Lerp 1st order state towards corrected server state
             _body.position = Vector3.Lerp(_body.position, _extrapolatedServerState.position, Time.fixedDeltaTime * 10f);
-            _body.rotation = Mathf.Lerp(_body.rotation, _extrapolatedServerState.rotation, Time.fixedDeltaTime * 10f);
-            // _body.velocity = Vector3.Lerp(_body.velocity, _extrapolatedServerState.velocity, Time.fixedDeltaTime * 10f);
-            // _body.angularVelocity = Mathf.Lerp(_body.angularVelocity, _extrapolatedServerState.angularVelocity, Time.fixedDeltaTime * 10f);
+
+            if (_synchRotation) {
+                _body.rotation = Mathf.Lerp(_body.rotation, _extrapolatedServerState.rotation, Time.fixedDeltaTime * 10f);
+            }
         }
     }
 
@@ -54,24 +57,28 @@ public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
             float angVel = _body.angularVelocity;
             stream.Serialize(ref pos);
             stream.Serialize(ref vel);
-            stream.Serialize(ref rot);
-            stream.Serialize(ref angVel);
+            if (_synchRotation) {
+                stream.Serialize(ref rot);
+                stream.Serialize(ref angVel);
+            }
         }
 
         if (!_view.IsMine && stream.IsReading) {
+            // Take server state, and predict forward in time by latency
+
             float latency = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
 
-            // Take server state, and predict forward in time by latency
             stream.Serialize(ref _extrapolatedServerState.position);
             stream.Serialize(ref _extrapolatedServerState.velocity);
-            stream.Serialize(ref _extrapolatedServerState.rotation);
-            stream.Serialize(ref _extrapolatedServerState.angularVelocity);
-
             _extrapolatedServerState.position += _extrapolatedServerState.velocity * latency;
-            _extrapolatedServerState.rotation += _extrapolatedServerState.angularVelocity * latency;
-
             _body.velocity = _extrapolatedServerState.velocity;
-            _body.angularVelocity = _extrapolatedServerState.angularVelocity;
+
+            if (_synchRotation) {
+                stream.Serialize(ref _extrapolatedServerState.rotation);
+                stream.Serialize(ref _extrapolatedServerState.angularVelocity);
+                _extrapolatedServerState.rotation += _extrapolatedServerState.angularVelocity * latency;
+                _body.angularVelocity = _extrapolatedServerState.angularVelocity;
+            }
         }
     }
 

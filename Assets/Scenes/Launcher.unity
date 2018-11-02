@@ -394,8 +394,10 @@ GameObject:
   m_Component:
   - component: {fileID: 880979663}
   - component: {fileID: 880979662}
+  - component: {fileID: 880979664}
+  - component: {fileID: 880979665}
   m_Layer: 0
-  m_Name: ConnectionManager
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -416,6 +418,7 @@ MonoBehaviour:
   _shipPrefab: {fileID: 1419788772740660, guid: d23fcaf6a7a0c07489279bc3faf76400,
     type: 2}
   _camera: {fileID: 1549697993}
+  _rockSpawner: {fileID: 880979664}
 --- !u!4 &880979663
 Transform:
   m_ObjectHideFlags: 0
@@ -429,6 +432,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &880979664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 880979661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b52e751f89046a64aa698055138d7835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnPeroid: 2
+  _rockPrefab: {fileID: 1707231522808202, guid: 89ea1b8940e06a74e9986190a5469b2e,
+    type: 2}
+--- !u!114 &880979665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 880979661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f32e9d6ba237e9d45bf8caad7be3c58d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1027386433
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,7 +909,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

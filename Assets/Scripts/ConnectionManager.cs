@@ -24,6 +24,7 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
     [SerializeField] private GameObject _shipPrefab;
     [SerializeField] private CameraController _camera;
+    [SerializeField] private SpaceRockSpawner _rockSpawner;
 
     private GameObject _shipInstance;
     private ConnectionState _state;
@@ -140,8 +141,11 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
     public void OnJoinedRoom() {
         Debug.Log("ConnectionManager || Succesfully joined room");
 
+        // This is where we actually start playing
+
         _shipInstance = PhotonNetwork.Instantiate(_shipPrefab.name, Vector3.zero, Quaternion.identity); // Todo: can add color here
         _camera.SetTarget(_shipInstance.GetComponent<Rigidbody2D>());
+        _rockSpawner.StartSpawning();
 
         SetState(ConnectionState.Playing);
     }
@@ -159,6 +163,11 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
     public void OnLeftRoom() {
         Debug.Log("ConnectionManager || Left room");
+
+        // This is where the fun ends
+
+        _rockSpawner.StopSpawning();
+        Destroy(_shipInstance);
     }
 
     #endregion
