@@ -12,6 +12,7 @@ public class ScoreManager : MonoBehaviour {
     private static readonly string ScoreKey = "Score";
 
     private static ScoreManager _instance;
+    private StringBuilder _string;
 
     public static ScoreManager Instance {
         get {
@@ -23,16 +24,18 @@ public class ScoreManager : MonoBehaviour {
     }
 
     private void Awake() {
-        
+        _string = new StringBuilder(1024);
     }
 
     private void OnGUI() {
-        StringBuilder sb = new StringBuilder("Scores:\n");
+        _string.Remove(0, _string.Length);
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++) {
-            sb.Append(PhotonNetwork.PlayerList[i].NickName + ": " + GetScore(PhotonNetwork.PlayerList[i]) + "\n");
+            _string.Append(PhotonNetwork.PlayerList[i].NickName);
+            _string.Append(": ");
+            _string.Append(GetScore(PhotonNetwork.PlayerList[i]));
+            _string.Append("\n");
         }
-
-        GUILayout.Label(sb.ToString());
+        GUILayout.Label(_string.ToString());
     }
 
     public void IncreaseScore(Player player) {
@@ -45,6 +48,6 @@ public class ScoreManager : MonoBehaviour {
         if (player.CustomProperties.ContainsKey(ScoreKey)) {
             return (int)player.CustomProperties[ScoreKey];
         }
-        return -1;
+        return 0;
     }
 }
