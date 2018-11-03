@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
     [SerializeField] private SpaceRockSpawner _rockspawner;
@@ -20,8 +21,16 @@ public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
     }
 
     public void LeaveMatch() {
+        StopAllCoroutines();
+        PhotonNetwork.DestroyAll(true);
         PhotonNetwork.Disconnect();
-        PhotonNetwork.LoadLevel("Launcher");
+        StartCoroutine(WaitAndReturnToLauncher());
+    }
+
+    private IEnumerator WaitAndReturnToLauncher() {
+        // This because LoadScene in same frame of disconnect causes issues
+        yield return new WaitForSeconds(0.1f);
+        SceneManager.LoadScene("Launcher");
     }
 
     private IEnumerator PlayMatch() {
@@ -53,7 +62,6 @@ public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
     private IEnumerator Respawn() {
         yield return new WaitForSeconds(3f);
         SpawnMyShip();
-        
     }
 
     private void SpawnMyShip() {

@@ -35,11 +35,14 @@ public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
 
     private void FixedUpdate() {
         if (!_view.IsMine) {
-            // Lerp 1st order state towards corrected server state
-            _body.position = Vector3.Lerp(_body.position, _serverState.position, Time.fixedDeltaTime * 10f);
+            // Lerp 1st order state towards corrected server state based on squared error
+            float positionError = (_serverState.position - _body.position).sqrMagnitude;
+            _body.position = Vector3.Lerp(_body.position, _serverState.position, Time.fixedDeltaTime * positionError);
 
             if (_synchRotation) {
-                _body.rotation = Mathf.Lerp(_body.rotation, _serverState.rotation, Time.fixedDeltaTime * 10f);
+                float rotationError = (_serverState.rotation - _body.rotation);
+                rotationError *= rotationError;
+                _body.rotation = Mathf.Lerp(_body.rotation, _serverState.rotation, Time.fixedDeltaTime * rotationError);
             }
         }
     }
