@@ -27,7 +27,6 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
     private void Start() {
         Color shipColor = Ramjet.Utilities.UnpackColor((int)_view.Owner.CustomProperties["shipColor"]);
         var renderers = gameObject.GetComponentsInChildren<Renderer>();
-        Debug.Log(renderers.Length);
         for (int i = 0; i < renderers.Length; i++) {
             renderers[i].material.SetColor("_Color", shipColor);
         }

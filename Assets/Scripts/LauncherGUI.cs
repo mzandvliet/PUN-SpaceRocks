@@ -8,7 +8,7 @@ using UnityEngine.UI;
     - make a little statemachine to manage these flows
  */
 
-public class MenuSystem : MonoBehaviour {
+public class LauncherGUI : MonoBehaviour {
     [SerializeField] private ConnectionManager _connectionManager;
     
     [SerializeField] private InputField _callSignInputField;

@@ -19,5 +19,19 @@ namespace Ramjet {
             result.a = ((col >> 24) & 0x000000FF) / 255f;
             return result;
         }
+
+        public static TransformState GetSpawnLocation(int order) {
+            float angleStep = (Mathf.PI * 2f) / 4f;
+            float angle = angleStep * order;
+            return new TransformState() {
+                position = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f) * 5f,
+                rotation = Quaternion.AngleAxis(-90f + angle * Mathf.Rad2Deg, new Vector3(0, 0, 1))
+            };
+        }
+    }
+
+    public struct TransformState {
+        public Vector3 position;
+        public Quaternion rotation;
     }
 }

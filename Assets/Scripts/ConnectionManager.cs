@@ -6,21 +6,11 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-/*
-
-    Can use PhotonNetwork.LoadLevel() when PhotonNetwork.isMasterClient. If AutoSyncScene
-    is set, then all connected clients will follow. Basically, am I a server for this room?
-
-    Need a lobby / solo-warmup stage
-
- */
-
 public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallbacks {
 	[SerializeField] private PunLogLevel _logLevel = PunLogLevel.Full;
 
     [SerializeField] private GameObject _shipPrefab;
     [SerializeField] private CameraController _camera;
-    [SerializeField] private SpaceRockSpawner _rockSpawner;
 
     private GameObject _shipInstance;
     private ConnectionState _state;
@@ -30,6 +20,9 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
     public event System.Action<string> OnNetworkEvent;
 
 	private void Awake() {
+        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(_camera.gameObject);
+
 		PhotonNetwork.AutomaticallySyncScene = true;
 		PhotonNetwork.AddCallbackTarget(this);
 		PhotonNetwork.LogLevel = _logLevel;
@@ -68,9 +61,14 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 		}
 	}
 
+    public void SpawnShip(Vector3 position, Quaternion rotation) {
+        _shipInstance = PhotonNetwork.Instantiate(_shipPrefab.name, position, rotation);
+        _camera.SetTarget(_shipInstance.GetComponent<Rigidbody2D>());
+    }
+
 	private void CreateNewCustomRoom() {
         Debug.Log("ConnectionManager || Making a room...");
-		string name = "MySuperSpiffyRoom_" + System.DateTime.UtcNow;
+		string name = PhotonNetwork.LocalPlayer + "_" + System.DateTime.UtcNow;
 		var options = new RoomOptions();
 		options.MaxPlayers = 4;
 		PhotonNetwork.CreateRoom(name, options);
@@ -97,8 +95,6 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
     public void OnConnected() {
         Debug.Log("ConnectionManager || Connected to server", this);
-
-        SetState(ConnectionState.Connected);
     }
 
     public void OnConnectedToMaster() {
@@ -146,13 +142,10 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
     public void OnJoinedRoom() {
         Debug.Log("ConnectionManager || Succesfully joined room");
 
-        // This is where we actually start playing
+        // Transition to lobby
 
-        _shipInstance = PhotonNetwork.Instantiate(_shipPrefab.name, Vector3.zero, Quaternion.identity); // Todo: can add color here
-        _camera.SetTarget(_shipInstance.GetComponent<Rigidbody2D>());
-        _rockSpawner.StartSpawning();
-
-        SetState(ConnectionState.Playing);
+        PhotonNetwork.LoadLevel("Lobby");
+        SetState(ConnectionState.Lobby);
     }
 
     public void OnJoinRoomFailed(short returnCode, string message) {
@@ -171,7 +164,6 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 
         // This is where the fun ends
 
-        _rockSpawner.StopSpawning();
         Destroy(_shipInstance);
     }
 
@@ -183,6 +175,12 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
     public void OnPlayerEnteredRoom(Photon.Realtime.Player player) {
         Debug.Log("ConnectionManager || Player joined: " + player.NickName);
         OnNetworkEvent("Player joined the game: " + player.NickName);
+
+        // Todo: count-down, transition to game
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.LoadLevel("Game");
+            //_rockSpawner.StartSpawning();
+        }
     }
 
     public void OnPlayerLeftRoom(Photon.Realtime.Player player) {
@@ -208,6 +206,6 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 public enum ConnectionState {
     Disconnected,
     Connecting,
-    Connected,
+    Lobby,
     Playing
 }
