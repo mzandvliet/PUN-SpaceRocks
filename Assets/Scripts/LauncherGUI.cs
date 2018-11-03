@@ -23,6 +23,12 @@ public class LauncherGUI : MonoBehaviour {
         _launchButton.onClick.AddListener(OnLaunchPressed);
     }
 
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
+        }
+    }
+
     private void OnDestroy() {
         _callSignInputField.onValueChanged.RemoveListener(OnCallsignChanged);
         _colorPicker.onValueChanged.RemoveListener(OnColorChanged);
