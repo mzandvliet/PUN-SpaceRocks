@@ -24,14 +24,6 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
         _body = gameObject.GetComponent<Rigidbody2D>();
     }
 
-    private void Start() {
-        Color shipColor = Ramjet.Utilities.UnpackColor((int)_view.Owner.CustomProperties["shipColor"]);
-        var renderers = gameObject.GetComponentsInChildren<Renderer>();
-        for (int i = 0; i < renderers.Length; i++) {
-            renderers[i].material.SetColor("_Color", shipColor);
-        }
-    }
-
     private void Update() {
         if (_view.IsMine && Input.GetKeyDown(KeyCode.Space) && PhotonNetwork.Time - _lastFireTime > _shotDelay) {
             Shoot();

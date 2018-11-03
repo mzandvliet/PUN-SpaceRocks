@@ -103,6 +103,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4750678976336306}
   - component: {fileID: 114881604733428336}
+  - component: {fileID: 114337818765717900}
   - component: {fileID: 114096555129537568}
   - component: {fileID: 114092225762499738}
   - component: {fileID: 61496389167290608}
@@ -663,6 +664,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _synchRotation: 1
+--- !u!114 &114337818765717900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1419788772740660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2d8940718b0704784b39badba89cc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114881604733428336
 MonoBehaviour:
   m_ObjectHideFlags: 1

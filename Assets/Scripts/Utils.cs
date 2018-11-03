@@ -2,6 +2,18 @@ using UnityEngine;
 
 namespace Ramjet {
     public static class Utilities {
+        public static Color ReadColorPrefs(string prefsKey) {
+            if (!PlayerPrefs.HasKey(prefsKey)) {
+                PlayerPrefs.SetInt(prefsKey, Ramjet.Utilities.PackColor(Color.white));
+            }
+            int packed = PlayerPrefs.GetInt(prefsKey);
+            return Ramjet.Utilities.UnpackColor(packed);
+        }
+
+        public static void WriteColorPrefs(string prefsKey, Color color) {
+            PlayerPrefs.SetInt(prefsKey, Ramjet.Utilities.PackColor(color));
+        }
+
         public static int PackColor(Color col) {
             int result = 0;
             result |= (byte)(col.r * 255f) << 0;
