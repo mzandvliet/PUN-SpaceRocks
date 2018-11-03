@@ -14,19 +14,29 @@ public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
     }
 
     private void Start() {
+        StartCoroutine(PlayMatch());
+    }
+
+    private IEnumerator PlayMatch() {
+        // Initialize
+        ScoreManager.Instance.ResetScores();
+
         var spawn = Ramjet.Utilities.GetSpawnLocation(PhotonNetwork.LocalPlayer.ActorNumber);
         _shipSpawner.SpawnShip(spawn.position, spawn.rotation);
         if (photonView.IsMine) {
             _rockspawner.StartSpawning();
         }
-    }
 
-    private void Update() {
-        var players = PhotonNetwork.PlayerList;
-        for (int i = 0; i < players.Length; i++) {
-            if (ScoreManager.Instance.GetScore(players[i]) >= _scoreTarget) {
-                StartCoroutine(EndGame(players[i]));
+        // Loop
+        while (true) {
+            var players = PhotonNetwork.PlayerList;
+            for (int i = 0; i < players.Length; i++) {
+                if (ScoreManager.Instance.GetScore(players[i]) >= _scoreTarget) {
+                    StartCoroutine(EndGame(players[i]));
+                    yield break;
+                }
             }
+            yield return new WaitForEndOfFrame();
         }
     }
 

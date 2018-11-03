@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class LobbyManager : Photon.Pun.MonoBehaviourPunCallbacks {
     private ShipSpawner _shipSpawner;
 
+    private Coroutine _waitRoutine;
+
     private void Awake() {
         _shipSpawner = GameObject.FindObjectOfType<ShipSpawner>();
     }
@@ -19,7 +21,7 @@ public class LobbyManager : Photon.Pun.MonoBehaviourPunCallbacks {
 
         StatusGUI.Instance.SetStatus("Joined lobby, waiting for others...");
 
-        StartCoroutine(WaitForPlayers(2));
+        _waitRoutine = StartCoroutine(WaitForPlayers(2));
     }
 
     private IEnumerator WaitForPlayers(int minimum) {
@@ -39,6 +41,7 @@ public class LobbyManager : Photon.Pun.MonoBehaviourPunCallbacks {
     [PunRPC]
     public void RPC_StartMatch(double serverTimestamp) {
         float latency = Mathf.Abs((float)(PhotonNetwork.Time - serverTimestamp));
+        StopCoroutine(_waitRoutine);
         StartCoroutine(AnnounceAndStartGame(latency));
     }
 

@@ -50,4 +50,13 @@ public class ScoreManager : MonoBehaviour {
         }
         return 0;
     }
+
+    public void ResetScores() {
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++) {
+            var player = PhotonNetwork.PlayerList[i];
+            int score = GetScore(player);
+            player.CustomProperties[ScoreKey] = (object)0;
+            player.SetCustomProperties(player.CustomProperties);
+        }
+    }
 }
