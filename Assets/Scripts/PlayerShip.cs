@@ -20,10 +20,21 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
 
     public event System.Action<PlayerShip> OnDeath;
 
+    private bool _isInvincible;
+
     private void Awake() {
         _view = gameObject.GetComponent<PhotonView>();
         _transform = gameObject.GetComponent<Transform>();
         _body = gameObject.GetComponent<Rigidbody2D>();
+
+        StartCoroutine(RunInvincibility());
+    }
+
+    private IEnumerator RunInvincibility() {
+        // Todo: animate renderers to show
+        _isInvincible = true;
+        yield return new WaitForSeconds(3);
+        _isInvincible = false;
     }
 
     private void Update() {
@@ -62,10 +73,10 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
     private void OnCollisionEnter2D(Collision2D other) {
         var rock = other.gameObject.GetComponent<SpaceRock>();
 
-        if (rock != null) {
+        if (!_isInvincible && rock != null) {
             if (_view.IsMine) {
                 ScoreManager.Instance.AddScore(_view.Owner, -3);
-                PhotonNetwork.Destroy(gameObject);
+                PhotonNetwork.Destroy(gameObject); // Todo: via spawner?
 
                 if (OnDeath != null) {
                     OnDeath(this);
