@@ -21,8 +21,10 @@ public class SpaceRock : MonoBehaviour {
         _body = gameObject.GetComponent<Rigidbody2D>();
     }
 
-    // [PunRPC]
-    // public void DestroyRock() {
-    //     PhotonNetwork.Destroy(gameObject);
-    // }
+    [PunRPC]
+    public void DestroyRock() {
+        if (_view.IsMine) {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
 }

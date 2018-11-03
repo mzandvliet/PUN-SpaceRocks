@@ -24,6 +24,7 @@ public class Projectile : MonoBehaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
+        
         var rock = other.gameObject.GetComponent<SpaceRock>();
 
         if (rock != null) {
@@ -33,11 +34,13 @@ public class Projectile : MonoBehaviour {
             if (_view.IsMine) {
                 ScoreManager.Instance.IncreaseScore(_view.Owner);
 
-                // rock.View.RPC("DestroyRock", RpcTarget.All);
-                PhotonNetwork.Destroy(rock.gameObject);
+                rock.View.RPC("DestroyRock", RpcTarget.MasterClient);
+                // PhotonNetwork.Destroy(rock.gameObject);
             }
         }
 
-        PhotonNetwork.Destroy(gameObject);
+        if (_view.IsMine) {
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 }
