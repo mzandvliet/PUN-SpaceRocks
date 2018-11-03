@@ -49,7 +49,7 @@ public class LauncherManager : Photon.Pun.MonoBehaviourPunCallbacks {
         }
     }
 
-    private void CreateNewCustomRoom() {
+    private void CreateNewRoom() {
         Debug.Log("ConnectionManager || Making a room...");
         string name = PhotonNetwork.LocalPlayer + "_" + System.DateTime.UtcNow;
         var options = new RoomOptions();
@@ -85,7 +85,6 @@ public class LauncherManager : Photon.Pun.MonoBehaviourPunCallbacks {
 
     #region PUN Callbacks
 
-
     public override void OnConnectedToMaster() {
         Debug.Log("ConnectionManager || Connected to master server", this);
         StatusGUI.Instance.SetStatus("Connected to master server");
@@ -96,7 +95,7 @@ public class LauncherManager : Photon.Pun.MonoBehaviourPunCallbacks {
     public override void OnJoinRandomFailed(short returnCode, string message) {
         Debug.LogError("ConnectionManager || JoinRandomRoom failed");
 
-        CreateNewCustomRoom();
+        CreateNewRoom();
     }
 
     public override void OnJoinedRoom() {

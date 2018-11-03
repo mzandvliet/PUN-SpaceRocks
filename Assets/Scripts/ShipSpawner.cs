@@ -12,10 +12,12 @@ public class ShipSpawner : MonoBehaviour {
 
     private GameObject _shipInstance;
 
-    public void SpawnShip(Vector3 position, Quaternion rotation) {
+    public PlayerShip SpawnShip(Vector3 position, Quaternion rotation) {
         _shipInstance = PhotonNetwork.Instantiate(_shipPrefab.name, position, rotation);
         var props = PhotonNetwork.LocalPlayer.CustomProperties;
 
         _camera.SetTarget(_shipInstance.GetComponent<Rigidbody2D>());
+
+        return _shipInstance.GetComponent<PlayerShip>();
     }
 }

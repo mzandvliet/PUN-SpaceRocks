@@ -13,7 +13,7 @@ public class PlayerShipRenderer : MonoBehaviour {
     private void Start() {
         _view = gameObject.GetComponent<PhotonView>();
 
-        if (_view) {
+        if (_view != null && _view.Owner != null) {
             var color = Ramjet.Utilities.UnpackColor((int)_view.Owner.CustomProperties["shipColor"]);
             SetColor(color);
         }

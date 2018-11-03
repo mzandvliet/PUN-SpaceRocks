@@ -27,9 +27,8 @@ public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
     private IEnumerator PlayMatch() {
         // Initialize
         ScoreManager.Instance.ResetScores();
+        SpawnMyShip();
 
-        var spawn = Ramjet.Utilities.GetSpawnLocation(PhotonNetwork.LocalPlayer.ActorNumber);
-        _shipSpawner.SpawnShip(spawn.position, spawn.rotation);
         if (photonView.IsMine) {
             _rockspawner.StartSpawning();
         }
@@ -47,6 +46,22 @@ public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
         }
     }
 
+    private void OnShipDeath(PlayerShip ship) {
+        StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn() {
+        yield return new WaitForSeconds(3f);
+        SpawnMyShip();
+        
+    }
+
+    private void SpawnMyShip() {
+        var spawn = Ramjet.Utilities.GetSpawnLocation(PhotonNetwork.LocalPlayer.ActorNumber);
+        var ship = _shipSpawner.SpawnShip(spawn.position, spawn.rotation);
+        ship.OnDeath += OnShipDeath;
+    }
+
     private IEnumerator EndGame(Player winner) {
         if (OnMatchEnded != null) {
             string winnerName = winner == PhotonNetwork.LocalPlayer ? "You" : winner.NickName;
@@ -59,11 +74,12 @@ public class GameplayManager : Photon.Pun.MonoBehaviourPunCallbacks {
         yield return new WaitForSeconds(5);
 
         for (int i = 8; i >= 1; i--) {
-            StatusGUI.Instance.SetStatus("Moving on in..." + i);
+            StatusGUI.Instance.SetStatus("Next game starting in..." + i);
             yield return new WaitForSeconds(1);
         }
 
         if (PhotonNetwork.IsMasterClient) {
+            // Take everyone who's left to the lobby
             PhotonNetwork.LoadLevel("Lobby");
         }
     }

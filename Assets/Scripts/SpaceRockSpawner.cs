@@ -6,6 +6,8 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
+/* Only the room host spawns rocks */
+
 public class SpaceRockSpawner : MonoBehaviour {
     [SerializeField] private float _rockLifetime = 30f;
     [SerializeField] private float _spawnPeroid = 2f;

@@ -18,6 +18,8 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
 
     private double _lastFireTime = -1.0;
 
+    public event System.Action<PlayerShip> OnDeath;
+
     private void Awake() {
         _view = gameObject.GetComponent<PhotonView>();
         _transform = gameObject.GetComponent<Transform>();
@@ -64,6 +66,10 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
             if (_view.IsMine) {
                 ScoreManager.Instance.AddScore(_view.Owner, -3);
                 PhotonNetwork.Destroy(gameObject);
+
+                if (OnDeath != null) {
+                    OnDeath(this);
+                }
             }
         }
     }
