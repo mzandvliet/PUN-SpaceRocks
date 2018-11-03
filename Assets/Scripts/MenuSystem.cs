@@ -21,7 +21,7 @@ public class MenuSystem : MonoBehaviour {
     private static readonly string PrefsPlayerNicknameKey = "player/callsign";
     private static readonly string PrefsPlayerNicknameDefault = "Rook Trainee";
 
-    private static readonly string PrefsPlayerShipColorKey = "player/shipcolor_";
+    private static readonly string PrefsPlayerShipColorKey = "player/shipcolor";
     private static readonly Color PrefsPlayerShipColorDefault = Color.white;
 
 
@@ -33,7 +33,19 @@ public class MenuSystem : MonoBehaviour {
         _connectionManager.OnNetworkEvent += OnNetworkEvent;
         _connectionManager.OnStateChanged += OnStateChanged;
 
+        TestColorPacking();
+
         LoadPlayerSettings();
+    }
+
+    private static void TestColorPacking() {
+        Color c = new Color(0.3f, 0.45f, 0.786f, 0.1f);
+        int packed = Ramjet.Utilities.PackColor(c);
+        Color unpacked = Ramjet.Utilities.UnpackColor(packed);
+
+        Debug.Log(c);
+        Debug.Log(packed);
+        Debug.Log(unpacked);
     }
 
     private void OnDestroy() {
@@ -66,7 +78,8 @@ public class MenuSystem : MonoBehaviour {
     }
 
     private void OnLaunchPressed() {
-        _connectionManager.SetNickname(_callSignInputField.text);
+        _connectionManager.SetPlayerNickname(_callSignInputField.text);
+        _connectionManager.SetPlayerShipColor(_colorPicker.CurrentColor);
         _connectionManager.Connect();
     }
 
@@ -85,22 +98,18 @@ public class MenuSystem : MonoBehaviour {
 
 
     private static Color ReadColor(string prefsKey) {
-        if (!PlayerPrefs.HasKey(prefsKey + "r")) {
-            PlayerPrefs.SetFloat(prefsKey + "r", 1f);
-            PlayerPrefs.SetFloat(prefsKey + "g", 1f);
-            PlayerPrefs.GetFloat(prefsKey + "b", 1f);
+        if (!PlayerPrefs.HasKey(prefsKey)) {
+            PlayerPrefs.SetInt(prefsKey, Ramjet.Utilities.PackColor(Color.white));
         }
 
-        float r = PlayerPrefs.GetFloat(prefsKey + "r");
-        float g = PlayerPrefs.GetFloat(prefsKey + "g");
-        float b = PlayerPrefs.GetFloat(prefsKey + "b");
+        int packed = PlayerPrefs.GetInt(prefsKey);
 
-        return new Color(r,g,b,1f);
+        return Ramjet.Utilities.UnpackColor(packed);
     }
 
     private static void WriteColor(string prefsKey, Color color) {
-        PlayerPrefs.SetFloat(prefsKey + "r", color.r);
-        PlayerPrefs.SetFloat(prefsKey + "g", color.g);
-        PlayerPrefs.SetFloat(prefsKey + "b", color.b);
+        PlayerPrefs.SetInt(prefsKey, Ramjet.Utilities.PackColor(color));
     }
+
+    
 }

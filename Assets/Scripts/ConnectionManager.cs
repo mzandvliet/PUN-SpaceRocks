@@ -43,8 +43,17 @@ public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmaki
 		Disconnect();
 	}
 
-    public void SetNickname(string nick) {
+    public void SetPlayerNickname(string nick) {
         PhotonNetwork.NickName = nick;
+    }
+
+    public void SetPlayerShipColor(Color color) {
+        int packedColor = Ramjet.Utilities.PackColor(color);
+        var props = PhotonNetwork.LocalPlayer.CustomProperties;
+        if (!props.ContainsKey("shipColor")) {
+            props.Add("shipColor", packedColor);
+        }
+        props["shipColor"] = packedColor;
     }
 
 	public void Connect() {
