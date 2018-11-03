@@ -15,9 +15,7 @@ public class ShipSpawner : MonoBehaviour {
     public void SpawnShip(Vector3 position, Quaternion rotation) {
         _shipInstance = PhotonNetwork.Instantiate(_shipPrefab.name, position, rotation);
         var props = PhotonNetwork.LocalPlayer.CustomProperties;
-       
-        var color = Ramjet.Utilities.UnpackColor((int)PhotonNetwork.LocalPlayer.CustomProperties["shipColor"]);
-        _shipInstance.GetComponent<PlayerShipRenderer>().SetColor(color);
+
         _camera.SetTarget(_shipInstance.GetComponent<Rigidbody2D>());
     }
 }

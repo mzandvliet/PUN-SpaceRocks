@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52e751f89046a64aa698055138d7835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnPeroid: 2
+  _spawnPeroid: 0.7
   _rockPrefab: {fileID: 1707231522808202, guid: 89ea1b8940e06a74e9986190a5469b2e,
     type: 2}
 --- !u!114 &512738107
@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rockspawner: {fileID: 512738106}
+  _scoreTarget: 10
 --- !u!4 &512738108
 Transform:
   m_ObjectHideFlags: 0

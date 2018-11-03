@@ -34,8 +34,7 @@ public class Projectile : MonoBehaviour {
             if (_view.IsMine) {
                 ScoreManager.Instance.AddScore(_view.Owner, 1);
 
-                rock.View.RPC("DestroyRock", RpcTarget.MasterClient);
-                // PhotonNetwork.Destroy(rock.gameObject);
+                rock.View.RPC("DestroyRock", RpcTarget.All);
             }
         }
 

@@ -23,13 +23,14 @@ public class LobbyManager : Photon.Pun.MonoBehaviourPunCallbacks {
     }
 
     private IEnumerator WaitForPlayers(int minimum) {
-        while (true) {
+        bool waiting = true;
+        while (waiting) {
             Debug.Log("Waiting on players: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + minimum);
             yield return new WaitForSeconds(1f);
             if (PhotonNetwork.CurrentRoom.PlayerCount >= minimum) {
                 if (PhotonNetwork.IsMasterClient) {
                     photonView.RPC("RPC_StartMatch", RpcTarget.All, PhotonNetwork.Time);
-                    yield break;
+                    waiting = false;
                 }
             }
         }
@@ -38,10 +39,10 @@ public class LobbyManager : Photon.Pun.MonoBehaviourPunCallbacks {
     [PunRPC]
     public void RPC_StartMatch(double serverTimestamp) {
         float latency = Mathf.Abs((float)(PhotonNetwork.Time - serverTimestamp));
-        StartCoroutine(WaitAndStartGame(latency));
+        StartCoroutine(AnnounceAndStartGame(latency));
     }
 
-    private IEnumerator WaitAndStartGame(float latency) {
+    private IEnumerator AnnounceAndStartGame(float latency) {
         StatusGUI.Instance.SetStatus("Starting game in...");
 
         yield return new WaitForSeconds(Mathf.Max(0f, 2f - latency));

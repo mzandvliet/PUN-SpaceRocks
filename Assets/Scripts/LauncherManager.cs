@@ -42,7 +42,6 @@ public class LauncherManager : Photon.Pun.MonoBehaviourPunCallbacks {
 
     public void Connect() {
         Debug.Log("ConnectionManager || Connecting...");
-
         if (PhotonNetwork.IsConnected) {
             PhotonNetwork.JoinRandomRoom();
         } else {

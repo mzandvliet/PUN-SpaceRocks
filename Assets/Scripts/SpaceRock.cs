@@ -16,6 +16,11 @@ public class SpaceRock : MonoBehaviour {
         get { return _view; }
     }
 
+    public double SpawnTime {
+        get;
+        set;
+    }
+
     private void Awake() {
         _view = gameObject.GetComponent<PhotonView>();
         _body = gameObject.GetComponent<Rigidbody2D>();

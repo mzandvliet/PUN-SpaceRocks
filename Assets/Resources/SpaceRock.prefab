@@ -26,7 +26,6 @@ GameObject:
   - component: {fileID: 114973211042385336}
   - component: {fileID: 114418957243752910}
   - component: {fileID: 114009552907523346}
-  - component: {fileID: 114485798497041142}
   m_Layer: 10
   m_Name: SpaceRock
   m_TagString: Untagged
@@ -105,7 +104,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -147,18 +146,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _synchRotation: 0
---- !u!114 &114485798497041142
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1707231522808202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0814d993a16142c4cbe362f22591ae43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _lifeTime: 30
 --- !u!114 &114973211042385336
 MonoBehaviour:
   m_ObjectHideFlags: 1
