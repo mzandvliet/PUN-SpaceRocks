@@ -13,10 +13,6 @@ using UnityEngine.UI;
 
     Need a lobby / solo-warmup stage
 
-    I don't need to use the scene system if I don't want to.
-
-    Todo: 
-    - make a little statemachine to manage these flows
  */
 
 public class ConnectionManager : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, IInRoomCallbacks {

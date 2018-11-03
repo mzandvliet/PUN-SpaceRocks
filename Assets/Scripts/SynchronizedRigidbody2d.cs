@@ -6,18 +6,12 @@ using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 
-/* Todo:
+/* 
+    Rudimentary synchronization for 2d rigidbodies.
 
-    Asteroids follow predictable patterns of motion
-    We can drastically lower the sync frequency for
-    them, because determinism.
-
-
-    Why do out-of-the-box Photon sync components
-    both read and write when they are MINE?
-
+    With more time I would:
+    - Add acceleration as a factor to sync (essentially, user inputs)
  */
-
 
 [RequireComponent(typeof(PhotonView), typeof(Rigidbody2D))]
 public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
@@ -26,25 +20,26 @@ public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
     private PhotonView _view;
     private Rigidbody2D _body;
 
-    private Rigidbody2DState _extrapolatedServerState;
+    private Rigidbody2DState _serverState;
+    private bool _initialized;
 
     private void Awake() {
         _view = gameObject.GetComponent<PhotonView>();
         _body = gameObject.GetComponent<Rigidbody2D>();
 
-        _extrapolatedServerState.position = _body.position;
-        _extrapolatedServerState.rotation = _body.rotation;
-        _extrapolatedServerState.velocity = _body.velocity;
-        _extrapolatedServerState.angularVelocity = _body.angularVelocity;
+        _serverState.position = _body.position;
+        _serverState.rotation = _body.rotation;
+        _serverState.velocity = _body.velocity;
+        _serverState.angularVelocity = _body.angularVelocity;
     }
 
     private void FixedUpdate() {
         if (!_view.IsMine) {
             // Lerp 1st order state towards corrected server state
-            _body.position = Vector3.Lerp(_body.position, _extrapolatedServerState.position, Time.fixedDeltaTime * 10f);
+            _body.position = Vector3.Lerp(_body.position, _serverState.position, Time.fixedDeltaTime * 10f);
 
             if (_synchRotation) {
-                _body.rotation = Mathf.Lerp(_body.rotation, _extrapolatedServerState.rotation, Time.fixedDeltaTime * 10f);
+                _body.rotation = Mathf.Lerp(_body.rotation, _serverState.rotation, Time.fixedDeltaTime * 10f);
             }
         }
     }
@@ -64,20 +59,31 @@ public class SynchronizedRigidbody2d : MonoBehaviour, IPunObservable {
         }
 
         if (!_view.IsMine && stream.IsReading) {
-            // Take server state, and predict forward in time by latency
-
             float latency = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
 
-            stream.Serialize(ref _extrapolatedServerState.position);
-            stream.Serialize(ref _extrapolatedServerState.velocity);
-            _extrapolatedServerState.position += _extrapolatedServerState.velocity * latency;
-            _body.velocity = _extrapolatedServerState.velocity;
+            stream.Serialize(ref _serverState.position);
+            stream.Serialize(ref _serverState.velocity);
+
+            // Take server state, and predict forward in time by latency
+            _serverState.position += _serverState.velocity * latency;
+            _body.velocity = _serverState.velocity;
 
             if (_synchRotation) {
-                stream.Serialize(ref _extrapolatedServerState.rotation);
-                stream.Serialize(ref _extrapolatedServerState.angularVelocity);
-                _extrapolatedServerState.rotation += _extrapolatedServerState.angularVelocity * latency;
-                _body.angularVelocity = _extrapolatedServerState.angularVelocity;
+                stream.Serialize(ref _serverState.rotation);
+                stream.Serialize(ref _serverState.angularVelocity);
+                // We set 2nd order state directly, should barely make a visual difference
+                _serverState.rotation += _serverState.angularVelocity * latency;
+                _body.angularVelocity = _serverState.angularVelocity;
+            }
+
+            if (!_initialized) {
+                // Snap to server state on first sync
+                // Todo: Not needed if we send initial state as part of the instantiation call, how does photon let us do that?
+                _body.position = _serverState.position;
+                _body.velocity = _serverState.velocity;
+                _body.rotation = _serverState.rotation;
+                _body.angularVelocity = _serverState.angularVelocity;
+                _initialized = true;
             }
         }
     }

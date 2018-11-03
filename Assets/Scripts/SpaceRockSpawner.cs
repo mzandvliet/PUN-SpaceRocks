@@ -24,7 +24,7 @@ public class SpaceRockSpawner : MonoBehaviour {
 
     private IEnumerator SpawnRepeating() {
         while (true) {
-            var rock = PhotonNetwork.Instantiate(_rockPrefab.name, RandomOnCircle(20f), Quaternion.AngleAxis(UnityEngine.Random.Range(0f, Mathf.PI * 2f), Vector3.up));
+            var rock = PhotonNetwork.Instantiate(_rockPrefab.name, RandomOnCircle(30f), Quaternion.AngleAxis(UnityEngine.Random.Range(0f, Mathf.PI * 2f), Vector3.up));
             var body = rock.GetComponent<Rigidbody2D>();
             var velocity = (-body.position.normalized + RandomOnCircle(0.5f)) * Random.Range(1f, 3f);
             var angularVelocity = Random.Range(-Mathf.PI * 0.5f, Mathf.PI * 0.5f);

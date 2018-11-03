@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(PhotonView))]
 public class Projectile : MonoBehaviour {
+    [SerializeField] private float _shotImpulse = 20f;
+
     private PhotonView _view;
     private Rigidbody2D _body;
 
@@ -18,7 +20,7 @@ public class Projectile : MonoBehaviour {
     }
 
     private void Start() {
-        _body.AddRelativeForce(new Vector2(0f, 15f), ForceMode2D.Impulse);
+        _body.AddRelativeForce(new Vector2(0f, _shotImpulse), ForceMode2D.Impulse);
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
@@ -33,8 +35,9 @@ public class Projectile : MonoBehaviour {
 
                 // rock.View.RPC("DestroyRock", RpcTarget.All);
                 PhotonNetwork.Destroy(rock.gameObject);
-                PhotonNetwork.Destroy(gameObject);
             }
         }
+
+        PhotonNetwork.Destroy(gameObject);
     }
 }

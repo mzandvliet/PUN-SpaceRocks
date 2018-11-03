@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(PhotonView))]
 public class PlayerShip : MonoBehaviour, IPunObservable {
+    [SerializeField] private float _shotDelay = 0.33f;
     [SerializeField] private GameObject _projectilePrefab;
 
     private PhotonView _view;
@@ -24,15 +25,19 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
     }
 
     private void Update() {
-        if (_view.IsMine && Input.GetKeyDown(KeyCode.Space) && PhotonNetwork.Time - _lastFireTime > 0.5) {
-            var pos = _transform.position + _transform.forward * 1f;
-            var rot = _transform.rotation;
-            var projectile = PhotonNetwork.Instantiate(_projectilePrefab.name, pos, rot);
-            var projectileBody = projectile.GetComponent<Rigidbody2D>();
-            projectileBody.velocity = _body.GetPointVelocity(pos);
-            
+        if (_view.IsMine && Input.GetKeyDown(KeyCode.Space) && PhotonNetwork.Time - _lastFireTime > _shotDelay) {
+            Shoot();
             _lastFireTime = PhotonNetwork.Time;
         }
+    }
+
+    private void Shoot() {
+        var pos = _transform.position + _transform.forward * 1.2f;
+        pos.z = 0.5f;
+        var rot = _transform.rotation;
+        var projectile = PhotonNetwork.Instantiate(_projectilePrefab.name, pos, rot);
+        var projectileBody = projectile.GetComponent<Rigidbody2D>();
+        projectileBody.velocity = _body.GetPointVelocity(pos);
     }
 
     private void FixedUpdate() {
@@ -43,8 +48,8 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
         float turn = Input.GetAxis("Horizontal");
         float forward = Input.GetAxis("Vertical");
 
-        float torque = turn * -140f * Time.fixedDeltaTime;
-        float thrust = forward * 160f * Time.fixedDeltaTime;
+        float torque = turn * -150f * Time.fixedDeltaTime;
+        float thrust = forward * 300f * Time.fixedDeltaTime;
 
         _body.angularDrag = 5f - 4.5f * Mathf.Abs(turn);
 
@@ -54,11 +59,5 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
         // Todo: Could perhaps improve client-side prediction by sending input
-    }
-
-    public static readonly string RPCID_AThingHappened = "RPC_AThingHappened";
-    [PunRPC]
-    public void RPC_AThingHappened(byte theThing) {
-        Debug.Log("A thing happened! " + theThing);
     }
 }

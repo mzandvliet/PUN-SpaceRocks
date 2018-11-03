@@ -12,7 +12,7 @@ public class ScoreManager : MonoBehaviour {
     private static readonly string ScoreKey = "Score";
 
     private static ScoreManager _instance;
-    private StringBuilder _string;
+    private StringBuilder _string; // Used to minimize generate garbage for string concatination
 
     public static ScoreManager Instance {
         get {
