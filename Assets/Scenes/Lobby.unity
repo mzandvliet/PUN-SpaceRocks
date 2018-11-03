@@ -446,6 +446,7 @@ GameObject:
   - component: {fileID: 2073810586}
   - component: {fileID: 2073810585}
   - component: {fileID: 2073810587}
+  - component: {fileID: 2073810588}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -491,3 +492,24 @@ MonoBehaviour:
   _shipPrefab: {fileID: 1419788772740660, guid: d23fcaf6a7a0c07489279bc3faf76400,
     type: 2}
   _camera: {fileID: 625273919}
+--- !u!114 &2073810588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2073810584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 1
+  InstantiationId: 1
+  isRuntimeInstantiated: 0

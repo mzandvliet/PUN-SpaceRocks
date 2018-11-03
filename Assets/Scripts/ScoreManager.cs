@@ -38,9 +38,9 @@ public class ScoreManager : MonoBehaviour {
         GUILayout.Label(_string.ToString());
     }
 
-    public void IncreaseScore(Player player) {
+    public void AddScore(Player player, int change) {
         int score = GetScore(player);
-        player.CustomProperties[ScoreKey] = (object)(score + 1);
+        player.CustomProperties[ScoreKey] = (object)(score + change);
         player.SetCustomProperties(player.CustomProperties);
     }
 

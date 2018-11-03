@@ -57,6 +57,17 @@ public class PlayerShip : MonoBehaviour, IPunObservable {
         _body.AddRelativeForce(new Vector2(0, thrust));
     }
 
+    private void OnCollisionEnter2D(Collision2D other) {
+        var rock = other.gameObject.GetComponent<SpaceRock>();
+
+        if (rock != null) {
+            if (_view.IsMine) {
+                ScoreManager.Instance.AddScore(_view.Owner, -3);
+                PhotonNetwork.Destroy(gameObject);
+            }
+        }
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
         // Todo: Could perhaps improve client-side prediction by sending input
     }

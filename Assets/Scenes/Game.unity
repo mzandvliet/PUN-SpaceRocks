@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 512738107}
   - component: {fileID: 512738106}
   - component: {fileID: 512738109}
+  - component: {fileID: 512738110}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -246,6 +247,27 @@ MonoBehaviour:
   _shipPrefab: {fileID: 1419788772740660, guid: d23fcaf6a7a0c07489279bc3faf76400,
     type: 2}
   _camera: {fileID: 1739548110}
+--- !u!114 &512738110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 512738105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 1
+  InstantiationId: 1
+  isRuntimeInstantiated: 0
 --- !u!1001 &1004669838
 Prefab:
   m_ObjectHideFlags: 0
@@ -285,6 +307,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 23323984449976430, guid: 4fb1f0104fa752244b7cc6bab0975882,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: df1e4b7cccd3e8a4c9081ab152dbbe54, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fb1f0104fa752244b7cc6bab0975882, type: 2}
   m_IsPrefabAsset: 0
