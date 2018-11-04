@@ -26,23 +26,4 @@ Implementation notes
 	* This does mean players can pop into a match that is in progress, which I like
 * GUI Color picker is from [this repository](https://github.com/judah4/HSV-Color-Picker-Unity) 
 
-After using Photon to build this thing, here's some of my impressions:
-* It's definitely quick to get up and running!
-	
-* Every object is responsible for synchronizing itself
-	* Would make it difficult to reason about synchronizing compositions of objects efficiently
-	* Trashes cpu cache because of discontinuous memory access patterns
-	* It's a consequence of Unity's old game object architecture
-	* Using the new ECS would make this orders of magnitude more efficient
-* Code for Server/Client/Owner/Remote roles tends to get mushed together
-	* Brings lots of branching based on view.isMine ownership
-	* We decoupled this in [one of our own early networking projects](https://bitbucket.org/m_zandvliet/rigidbodysync/src/default/Assets/Scripts/Player/), makes the code for complex networked objects more manageable
-* Peer2Peer by default
-	* Makes it pretty trivial to write cheats and exploits
-  * For processes not associated with a specific player, not clear where they should live
-	* such as the process that spawns asteroids
-* Photon library uses classic managed dotnet code
-	* Such as their Hashmap implementation, used for synhronizing per-player state like scores
-	* As a project grows, the garbage generated like this will slow it down
 
-Over the next week I'll be trying out Unity's [new network transport layer](https://github.com/Unity-Technologies/multiplayer), which is in early testing. Have you heard of it?
