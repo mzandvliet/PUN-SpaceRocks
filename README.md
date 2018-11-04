@@ -26,4 +26,6 @@ Implementation notes
 	* This does mean players can pop into a match that is in progress, which I like
 * GUI Color picker is from [this repository](https://github.com/judah4/HSV-Color-Picker-Unity) 
 
+Be sure to check out [this networking prototype](https://bitbucket.org/m_zandvliet/rigidbodysync/src/default/Assets/Scripts/Player/) I worked on a few years ago. It features fast-moving space ships in an authoritative server setup, with the code for different network roles into split neatly into separate components. Prediction and correction are done using a custom forward-euler integrator that matches single Unity rigidbodies well enough.
 
+I think I could actually take that principle and use it in this Photon-based project to really tighten it up, but I figured that out a bit late.
