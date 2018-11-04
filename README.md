@@ -16,7 +16,7 @@ Implementation notes
 	* Made a custom synchronization component for them
 * Very peer-to-peer setup, which is what the PUN plugin is all about I guess
 	* Except for the asteroid spawning
-* Had never actually used this Photon plugin for networking, so:
+* Had never actually used PUN for implementing my netcode, so:
 	* I didn't use any of the sample scripts, wanted to write the logic myself, get a feel for their core library
 	* More on that below
 	* I also didn't use the Photon Lobby system
