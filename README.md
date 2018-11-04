@@ -27,10 +27,9 @@ Implementation notes
 
 After using Photon to build this thing, here's some of my impressions:
 * Every object is responsible for synchronizing itself
-	* Cannot reason about synchronizing compositions of objects efficiently
-	* Trashes cpu cache because of discontinuous traversal
-    * For many synchronized objects, anyway
-	* This is due to Unity's old game object architecture
+	* Would make it difficult to reason about synchronizing compositions of objects efficiently
+	* Trashes cpu cache because of discontinuous memory access patterns
+	* It's a consequence of Unity's old game object architecture
   * Using the new ECS would make this orders of magnitude more efficient
 * Code for Server/Client/Owner/Remote roles tends to get mushed together
   * Brings lots of branching based on view.isMine ownership
