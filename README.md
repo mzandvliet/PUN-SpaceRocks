@@ -9,9 +9,6 @@ Implementation notes
 * Unity 2018.2.8f1
 	* Should import in any 2018.2.x without issue
 * Used a more recent Photon PUN package
-	* Noticed there was an Asteroids demo game in there, took a quick look but threw it out. You'll notice mine is different.
-	* PUN app id is my own
- 		* Presumed some other folks might be using the one you sent.
 * Used 2d physics components
 	* Made a custom synchronization component for them
 * Very peer-to-peer setup, which is what the PUN plugin is all about I guess
