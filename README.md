@@ -21,8 +21,11 @@ Implementation notes
 	* So I immediately connect to a room, which then has a Lobby stage and a Game stage
 	* ... I didn't realize Photon had a Lobby concept built in until after I did it this way ¯\_(ツ)_/¯
 	* This does mean players can pop into a match that is in progress, which I like
-* GUI Color picker is from [this repository](https://github.com/judah4/HSV-Color-Picker-Unity) 
+* Didn't have much time to focus on UI, but it's functional.
+	* GUI Color picker is from [this repository](https://github.com/judah4/HSV-Color-Picker-Unity)
 
-Be sure to check out [this networking prototype](https://bitbucket.org/m_zandvliet/rigidbodysync/src/default/Assets/Scripts/Player/) I worked on a few years ago. It features fast-moving space ships in an authoritative server setup, with the code for different network roles into split neatly into separate components. Prediction and correction are done using a custom forward-euler integrator that matches single Unity rigidbodies well enough.
+Be sure to check out [this networking prototype](https://bitbucket.org/m_zandvliet/rigidbodysync) I worked on a few years ago, it shows net. It's built on top of the low level UNET transport layer, features fast-moving aircraft in an authoritative client-server setup, with the [code for different network roles into split neatly into separate components](https://bitbucket.org/m_zandvliet/rigidbodysync/src/default/Assets/Scripts/Player/). Prediction and correction are done using a custom forward-Euler integrator that matches single Unity rigidbody behaviour well enough. The idea is that a physics component applies forces through an interface, and that can be handled by either Unity PhysX or the custom integrator interchangeably.
 
-I think I could actually take that principle and use it in this Photon-based project to really tighten it up, but I figured that out a bit late.
+PUN by default seems to lead you to write code with all the roles mixed together, using view.IsMine to figure out what code path to take on the fly. Though, knowning the underlying API now I think I could actually take those principles and use them in this Photon-based project to really tighten it up. I figured that out late in the process, though.
+
+Finally, have you has a chance to look at Unity's [freshly announced network transport layer](https://github.com/Unity-Technologies/multiplayer)? It looks very efficient, given that it's all built using NativeContainers and the multithreaded job system. Much more flexible too.
