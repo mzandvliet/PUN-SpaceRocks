@@ -2,6 +2,11 @@
 
 [Win-64 Client Download](https://www.dropbox.com/s/p7rc31ovh0sd7ch/PUN-SpaceRocks.zip?dl=0) based on commit b860aa4980d04bcc90a7595bcefbbf2fb024e30a
 
+Controls:
+- Movement: WASD / Arrow Keys
+- Shoot: Spacebar
+- Escape: Quit game
+
 ![](https://i.imgur.com/pu2jmpk.jpeg)
 
 Implementation notes
